@@ -1,35 +1,49 @@
-#include "sort.h"
+nclude "sort.h"
 #include <stdio.h>
 
 /**
- * selection_sort - Sorts an array of integers in ascending order
- *                  using the Selection sort algorithm
- *
- * @array: Array of integers to be sorted
- * @size: Number of elements in the array
+ * swap_nodes - Swap two adjacent nodes in a doubly linked list
+ * @list: Double pointer to the head of the list
+ * @left: Pointer to the first node
+ * @right: Pointer to the second node
  */
-void selection_sort(int *array, size_t size)
+void swap_nodes(listint_t **list, listint_t *left, listint_t *right)
 {
-	size_t i, j, min_idx;
-	int temp;
+	if (left->prev)
+		left->prev->next = right;
+	else
+		*list = right;
 
-	if (size < 2 || !array)
+	if (right->next)
+		right->next->prev = left;
+
+	left->next = right->next;
+	right->prev = left->prev;
+	left->prev = right;
+	right->next = left;
+	print_list(*list);
+}
+
+/**
+ * insertion_sort_list - Sorts a doubly linked list of integers
+ *                       in ascending order using Insertion sort
+ * @list: Double pointer to the head of the list
+ */
+void insertion_sort_list(listint_t **list)
+{
+	listint_t *current, *next;
+
+	if (!list || !*list || !(*list)->next)
 		return;
 
-	for (i = 0; i < size - 1; i++)
+	current = (*list)->next;
+	while (current)
 	{
-		min_idx = i;
-		for (j = i + 1; j < size; j++)
+		next = current->next;
+		while (current->prev && current->n < current->prev->n)
 		{
-			if (array[j] < array[min_idx])
-				min_idx = j;
+			swap_nodes(list, current->prev, current);
 		}
-		if (min_idx != i)
-		{
-			temp = array[i];
-			array[i] = array[min_idx];
-			array[min_idx] = temp;
-			print_array(array, size); /* Print array after each swap */
-		}
+		current = next;
 	}
 }
